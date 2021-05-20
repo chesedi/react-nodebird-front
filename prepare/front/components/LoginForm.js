@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { Button, Form, Input } from 'antd'
 import Link from "next/link";
 import styled from 'styled-components'
+import useInput from '../hooks/useInput';
 
 const ButtonWrapper = styled.div`
   margin-top: 10px
@@ -13,18 +14,8 @@ const FormWrapper = styled(Form)`
 
 
 const LoginForm = ({setIsLoggedIn}) => {
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
-
-  const onChangeId = useCallback((e) => {
-    setId(e.target.value)
-  }, []);
-
-  const onChangePassword = useCallback((e) => {
-    setPassword(e.target.value)
-  }, []);
-
-  /* const style = useMemo(() => ({ marginTop: 10}), []); */
+  const [id, onChangeId] = useInput('')
+  const [password, onChangePassword] = useInput('')
 
   const onSubmitForm =  useCallback(() => {
     console.log(id, password);
