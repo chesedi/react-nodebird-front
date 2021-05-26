@@ -5,6 +5,8 @@ import styled from 'styled-components'
 
 import AppLayout from "../components/AppLayout";
 import useInput from "../hooks/useInput";
+import { SIGN_UP_REQUEST } from "../reducers/user";
+import { useDispatch, useSelector } from "react-redux";
 
 const ErrorMessage = styled.div`
   color: red;
@@ -12,6 +14,8 @@ const ErrorMessage = styled.div`
 
 
 const Signup = () => {
+  const dispatch = useDispatch();
+  const { signUpLoading } = useSelector((state)=> state.user)
   const [email, onChangeEmail] = useInput('');
   const [nickname, onChangeNickname] = useInput('');
   const [password, onChangePassword] = useInput('');
@@ -38,6 +42,10 @@ const Signup = () => {
       return setTermError(true);
     }
     console.log(email, nickname, password);
+    dispatch({
+      type: SIGN_UP_REQUEST,
+      data: { email, password, nickname }
+    })
    },[password, passwordCheck, term]);
 
   return (
@@ -78,7 +86,7 @@ const Signup = () => {
             {termError && <ErrorMessage>약관에 동의하셔야 합니다.</ErrorMessage>}
           </div>
           <div style={{ marginTop: 10 }}>
-            <Button type="primary" htmlType="submit">가입하기</Button>
+            <Button type="primary" htmlType="submit" loading={signUpLoading}>가입하기</Button>
           </div>
         </Form>
       </AppLayout>
