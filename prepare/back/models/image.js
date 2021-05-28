@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     // 모델에 대한 셋팅 영역
-    charset: 'utf',
+    charset: 'utf8',
     collate: 'utf8_general_ci', // 이모티콘 저장
   });
   Image.associate = (db) => {
