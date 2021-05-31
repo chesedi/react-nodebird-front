@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { Avatar, Button, Card } from 'antd'
 import { useDispatch, useSelector } from 'react-redux';
+
 import { logoutRequstAction } from '../reducers/user'
 
 const UserProfile = () => {
