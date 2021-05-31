@@ -1,7 +1,7 @@
 
-import shortId from 'shortid';
+// import shortId from 'shortid';
 import produce from 'immer';
-import faker from 'faker';
+// import faker from 'faker';
 
 const initialState = {
   mainPosts: [],
@@ -18,24 +18,25 @@ const initialState = {
   addCommentError: null,
 }
 
-export const generateDummyPost = (number) => Array(number).fill().map((v, i) => ({
-  id: shortId.generate(),
-  User: {
-    id: shortId.generate(),
-    nickname: faker.name.findName(),
-  },
-  content: faker.lorem.paragraph(),
-  Images: [{
-    src: faker.image.image(),
-  }],
-  Comments: [{
-    User: {
-      id: shortId.generate(),
-      nickname: faker.name.findName(),
-    },
-    content: faker.lorem.sentence(),
-  }],
-}));
+// 나중에 필요할꺼 같음
+// export const generateDummyPost = (number) => Array(number).fill().map((v, i) => ({
+//   id: shortId.generate(),
+//   User: {
+//     id: shortId.generate(),
+//     nickname: faker.name.findName(),
+//   },
+//   content: faker.lorem.paragraph(),
+//   Images: [{
+//     src: faker.image.image(),
+//   }],
+//   Comments: [{
+//     User: {
+//       id: shortId.generate(),
+//       nickname: faker.name.findName(),
+//     },
+//     content: faker.lorem.sentence(),
+//   }],
+// }));
 
 // initialState.mainPosts = initialState.mainPosts.concat(
 // );
