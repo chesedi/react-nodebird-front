@@ -10,7 +10,17 @@ router.post('/', isLoggedIn, async (req, res, next) => { // POST /post
       content: req.body.content,
       UserId: req.user.id,
     })
-    res.status(201).json(post);
+    const fullPost = await Post.findOne({
+      where: { id: Post.id} ,
+      include: [{
+        model: Image,
+      }, {
+        model: Comment,
+      }, {
+        model: User,
+      }]
+    })
+    res.status(201).json(fullPost);
   } catch (error) {
     console.error(error);
     next(error);

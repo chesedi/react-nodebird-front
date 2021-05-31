@@ -19,10 +19,12 @@ db.sequelize.sync()
   .catch(console.error);
 passportConfig();
 
+
+// cors 설정
 app.use(cors({
-  origin: 'http://localhost:3060',
-  // credentials: true,
-}));// 모든 요청에 대해 cors 방식을 허용한다
+  origin: true,
+  credentials: true,
+}));
 app.use(express.json()); // FE json 형식 데이터를 처리해줌
 app.use(express.urlencoded({ extended: true})); // FE form-submit 방식 데이터 처리
 app.use(cookieParser(process.env.COOKIE_SECRET));
