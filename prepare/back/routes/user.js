@@ -2,12 +2,12 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const passport = require('passport');
 
-const { User } = require('../models');
-const db = require('../models');
+const { User, Post } = require('../models');
+const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
-router.post('/login', (req, res, next) => {
+router.post('/login', isNotLoggedIn, (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     // passport 전략의 리턴값이 전달된다..
     if (err) {
@@ -28,12 +28,12 @@ router.post('/login', (req, res, next) => {
           exclude: ['password']
         },
         include: [{
-          model: db.Post,
+          model: Post,
         }, {
-          model: db.User,
+          model: User,
           as: 'Followings'
         }, {
-          model: db.User,
+          model: User,
           as: 'Followers'
         }]
       })
@@ -42,7 +42,7 @@ router.post('/login', (req, res, next) => {
   }) (req, res, next);
 });
 
-router.post('/', async (req, res, next) => { // POST /user/
+router.post('/', isNotLoggedIn, async (req, res, next) => { // POST /user/
   try {
     // 중복 체크
     const exUser = await User.findOne({
@@ -66,7 +66,7 @@ router.post('/', async (req, res, next) => { // POST /user/
   }
 });
 
-router.post('/user/logout', (req, res) => {
+router.post('/logout', isLoggedIn, (req, res) => {
     req.logOut();
     req.session.destroy();
     res.send('ok');
