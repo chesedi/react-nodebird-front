@@ -7,7 +7,6 @@ import useInput from '../hooks/useInput';
 const PostForm = () => {
   const { imagePaths, addPostDone } = useSelector((state) => state.post);
   const dispatch = useDispatch();
-  const imageInput = useRef();
   const [text, onChangeText, setText] = useInput('')
 
   useEffect(() => {
@@ -19,11 +18,13 @@ const PostForm = () => {
 
   const onSubmit = useCallback(() => {
     dispatch(addPost(text))
-  }, []);
+  }, [text]);
 
+  const imageInput = useRef();
   const onClickImageUpload = useCallback(()=> {
     imageInput.current.click();
   }, [imageInput.current]);
+
   return (
     <Form style={{ margin: '10px 0 20px'}} encType="multipart/form-data" onFinish={onSubmit}>
       <Input.TextArea

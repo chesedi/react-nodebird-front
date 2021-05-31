@@ -8,7 +8,8 @@ module.exports = () => {
     done(null, user.id);
   });
 
-  // 이후 호출 부터 사용자 정보 복구
+  // 라우터 접근 전에 해당 함수를 실행함
+  // So, 이후 호출 부터 사용자 정보에 접근이 가능
   passport.deserializeUser(async (id, done) => {
     try {
       const user = await User.findOne({ where: { id }});
