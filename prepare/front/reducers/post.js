@@ -22,6 +22,9 @@ const initialState = {
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
+  uploadImagesLoading: false,
+  uploadImagesDone: false,
+  uploadImagesError: null,
 }
 
 // 나중에 필요할꺼 같음
@@ -47,6 +50,10 @@ const initialState = {
 // initialState.mainPosts = initialState.mainPosts.concat(
 // );
 
+export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
+export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
+export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
+
 export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
 export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
 export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
@@ -71,6 +78,9 @@ export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
+// 동기 acion이라 액션을 한개만 만들면 됨
+export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+
 
 export const addPost = (data) => ({
   type: ADD_POST_REQUEST,
@@ -86,6 +96,24 @@ export const addComment = (data) => ({
 const reducer = (state = initialState, action) => {
   return produce(state, (draft) => {
     switch (action.type) {
+    case REMOVE_IMAGE:
+      draft.imagePaths = draft.imagePaths.filter((v, i) => i !== action.data);
+      break;
+    case UPLOAD_IMAGES_REQUEST:
+      draft.uploadImagesLoading = true;
+      draft.uploadImagesDone = false;
+      draft.uploadImagesError = null;
+      break;
+    case UPLOAD_IMAGES_SUCCESS: {
+      draft.imagePaths = action.data;
+      draft.uploadImagesLoading = false;
+      draft.uploadImagesDone = true;
+      break;
+    }
+    case UPLOAD_IMAGES_FAILURE:
+      draft.uploadImagesLoading = false;
+      draft.uploadImagesError = action.error;
+      break;
       case LIKE_POST_REQUEST:
         draft.likePostLoading = true;
         draft.likePostDone = false;
@@ -142,6 +170,7 @@ const reducer = (state = initialState, action) => {
         draft.addPostLoading = false;
         draft.addPostDone = true;
         draft.mainPosts.unshift(action.data);
+        draft.imagePaths = [];
         break;
       case ADD_POST_FAILURE:
         draft.addPostLoading = false;

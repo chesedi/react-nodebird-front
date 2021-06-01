@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const path = require('path');
 
 const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
@@ -27,6 +28,9 @@ app.use(cors({
   origin: true,
   credentials: true,
 }));
+
+// FE에서 접근하는 경로 명시('/') 및 서버쪽 실제 폴더 이름은 static 메소드 안에서 설정
+app.use('/', express.static(path.join(__dirname, 'uploads')))
 app.use(express.json()); // FE json 형식 데이터를 처리해줌
 app.use(express.urlencoded({ extended: true})); // FE form-submit 방식 데이터 처리
 app.use(cookieParser(process.env.COOKIE_SECRET));
