@@ -25,7 +25,8 @@ passportConfig();
 app.use(morgan('dev'));
 // cors 설정
 app.use(cors({
-  origin: true,
+  // origin: true,
+  origin: 'http://localhost:3060',
   credentials: true,
 }));
 

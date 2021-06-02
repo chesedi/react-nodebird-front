@@ -8,8 +8,8 @@ const { route } = require('./post');
 
 const router = express.Router();
 
-// 새로고침시 호출할 API
 router.get('/', async (req, res, next) => {  // GET /user
+  console.log('req.headers', req.headers);
   try {
     if (req.user) {
       const fullUserWithoutPassword = await User.findOne({

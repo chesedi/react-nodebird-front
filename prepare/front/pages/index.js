@@ -6,8 +6,9 @@ import AppLayout from "../components/AppLayout";
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
 import { LOAD_POSTS_REQUEST } from "../reducers/post";
-import { LOAD_USER_REQUEST } from "../reducers/user";
+import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
 import wrapper from "../store/configureStore";
+import axios from 'axios';
 
 
 const Home = () => {
@@ -52,10 +53,17 @@ const Home = () => {
 
 // 서버 쪽에서 화면 그리기 전에 먼저 실행함
 // 실행 결과를 HYDRATE로 보내줌
+// 프론트 서버에서만 실행되는 영역
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  // 주의해야 할 부분(why? 서버 자원은 모두의 자원이기 때문에)
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+  if (context.req && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
   console.log('context', context);
   context.store.dispatch({
-    type: LOAD_USER_REQUEST,
+    type: LOAD_MY_INFO_REQUEST,
   });
   context.store.dispatch({
     type: LOAD_POSTS_REQUEST,
