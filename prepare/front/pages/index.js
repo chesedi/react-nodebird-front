@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
-
-import AppLayout from "../components/AppLayout";
-import PostForm from '../components/PostForm';
-import PostCard from '../components/PostCard';
-import { LOAD_POSTS_REQUEST } from "../reducers/post";
-import { LOAD_MY_INFO_REQUEST } from "../reducers/user";
-import wrapper from "../store/configureStore";
 import axios from 'axios';
 
+import PostForm from '../components/PostForm';
+import PostCard from '../components/PostCard';
+import { LOAD_POSTS_REQUEST } from '../reducers/post';
+import AppLayout from '../components/AppLayout';
+import wrapper from '../store/configureStore';
+import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -22,17 +21,14 @@ const Home = () => {
     }
   }, [retweetError]);
 
-  useEffect(()=> {
-    function onScroll(){
-      // scrollY : 얼마나 내렸는지
-      // clientHeight : 화면 보이는 길이
-      // scrollHeihgt: 총 길이
-      if(window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300){
-        if(hasMorePosts && !loadPostsLoading){
+  useEffect(() => {
+    function onScroll() {
+      if (window.pageYOffset + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+        if (hasMorePosts && !loadPostsLoading) {
           const lastId = mainPosts[mainPosts.length - 1]?.id;
           dispatch({
             type: LOAD_POSTS_REQUEST,
-            lastId
+            lastId,
           });
         }
       }
@@ -46,30 +42,27 @@ const Home = () => {
   return (
     <AppLayout>
       {me && <PostForm />}
-      {mainPosts.map((post) => <PostCard key={post.id} post={post}/> )}
+      {mainPosts.map((post) => <PostCard key={post.id} post={post} />)}
     </AppLayout>
   );
 };
 
-// 서버 쪽에서 화면 그리기 전에 먼저 실행함
-// 실행 결과를 HYDRATE로 보내줌
-// 프론트 서버에서만 실행되는 영역
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
-  // 주의해야 할 부분(why? 서버 자원은 모두의 자원이기 때문에)
+  console.log('getServerSideProps start');
+  console.log(context.req.headers);
   const cookie = context.req ? context.req.headers.cookie : '';
   axios.defaults.headers.Cookie = '';
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie;
   }
-  console.log('context', context);
   context.store.dispatch({
     type: LOAD_MY_INFO_REQUEST,
   });
   context.store.dispatch({
     type: LOAD_POSTS_REQUEST,
   });
-  // next-redux-wrapper doc에 나와 있는 사용법
   context.store.dispatch(END);
+  console.log('getServerSideProps end');
   await context.store.sagaTask.toPromise();
 });
 
